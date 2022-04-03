@@ -2,45 +2,27 @@
 
 namespace App\Middleware;
 
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\ResponseInterface;
 use App\Services\Auth as AuthService;
-use App\Services\Config;
-
-use App\Services\Jwt;
 
 class Auth
 {
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next)
+    /**
+     * @param \Slim\Http\Request    $request
+     * @param \Slim\Http\Response   $response
+     * @param callable              $next
+     *
+     * @return \Slim\Http\Response
+     */
+    public function __invoke($request, $response, $next)
     {
         $user = AuthService::getUser();
         if (!$user->isLogin) {
-            $newResponse = $response->withStatus(302)->withHeader('Location', '/auth/login');
-            return $newResponse;
+            return $response->withStatus(302)->withHeader('Location', '/auth/login');
         }
-        
-        
-        if ($user->enable == 0 && $_SERVER["REQUEST_URI"] != "/user/disable") {
-            $newResponse = $response->withStatus(302)->withHeader('Location', '/user/disable');
-            return $newResponse;
+        $enablePages = array('/user/disable', '/user/backtoadmin', '/user/logout');
+        if ($user->enable == 0 && !in_array($_SERVER['REQUEST_URI'], $enablePages)) {
+            return $response->withStatus(302)->withHeader('Location', '/user/disable');
         }
-        
-        if (Config::get('enable_duoshuo')=='true') {
-            $token = array(
-                "short_name"=>Config::get('duoshuo_shortname'),
-                "user_key"=>$user->id,
-                "name"=>$user->user_name,
-                "email"=>$user->email
-            );
-            
-            
-            
-            $duoshuoToken = JWT::encode_withkey($token, Config::get('duoshuo_apptoken'));
-            
-            setcookie('duoshuo_token', $duoshuoToken);
-        }
-        
-        $response = $next($request, $response);
-        return $response;
+        return $next($request, $response);
     }
 }

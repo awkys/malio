@@ -1,41 +1,101 @@
-# 欢迎使用ss panel v3 mod 再次修改版
+<img src="https://cdn.jsdelivr.net/npm/skx@0.1.3/img/uim-logo-round.png" alt="logo" width="130" height="130" align="left" />
+
+<h1>SSPanel UIM</h1>
+
+> Across the Great Wall we can reach every corner in the world
+
+<br/>
+
+[![License](https://img.shields.io/github/license/Anankke/SSPanel-Uim?style=flat-square)](https://github.com/Anankke/SSPanel-Uim/blob/dev/LICENSE)
+[![Travis Build Status](https://img.shields.io/travis/Anankke/SSPanel-UIM/master.svg?style=flat-square)](https://travis-ci.org/Anankke/SSPanel-Uim)
+![GitHub repo size](https://img.shields.io/github/repo-size/anankke/sspanel-uim?style=flat-square&color=328657)
+[![Telegram Channel](https://img.shields.io/badge/news-t.me%2Fsspanel_uim-0d86d7?style=flat-square)](https://t.me/sspanel_uim)
+[![Telegram Chat](https://img.shields.io/badge/chat-t.me%2Fssunion-0d86d7?style=flat-square)](https://t.me/ssunion)
+
+[演示站点](https://sspanel.host) | [使用文档](https://wiki.sspanel.host) | [更新日志](https://github.com/Anankke/SSPanel-Uim/releases) | [Telegram 频道](https://t.me/sspanel_uim) | [Telegram 水群](https://t.me/ssunion)
+
+## 简介
+
+SSPanel UIM 是一款专为 Shadowsocks / ShadowsocksR / V2Ray 设计的多用户管理面板，基于 ss-panel-v3-mod 开发。
+
+## AD
+
+**特别优惠 Malio SSPANEL 主题 + Rico V2Ray 后端，原价 1000 CNY，现在只需 899 CNY，👉[查看详情](https://malio.fxxkmy.life/)**
+
+## 特性
+
+- 集成超过 8 种支付系统
+- 重构面板首页、节点列表、商品列表；新增 SPA（Single Page Apps）版 UI
+- 商品增加同时连接设备数，用户限速属性
+- 新用户注册现金奖励、用户常规端口切换与指定
+- 公共库文件加载使用 jsDelivr
+- 支持 V2Ray
+- 巨量性能优化
+- 更多新功能写不下了
+
+## 安装
+
+SSPanel UIM 的需要以下程序才能正常的安装和运行：
+
+- Git
+- MySQL
+- PHP 7.2+
+- Composer
+
+SSPanel UIM 支持安装在 LNMP、宝塔面板、Plesk 面板、oneinstack 等集成环境中。安装教程请参阅 [文档](https://wiki.sspanel.host)。
+
+## 演示
+
+[演示站](https://sspanel.host) 每天更新 `dev` 分支最新源码。
+
+```
+账号：admin
+密码：admin
+mukey ShirakamiFubuki
+```
+
+## 文档
+
+> 我们安装，我们更新，我们开发
+
+[SSPanel UIM 的文档](https://wiki.sspanel.host)，在这里你可以找到大部分问题的解答。
+
+## 贡献
+
+[提出新想法 & 提交 Bug](https://github.com/Anankke/SSPanel-Uim/issues/new) | [改善文档 & 投稿](https://github.com/sspanel-uim/Wiki) | [Fork & Pull Request](https://github.com/Anankke/SSPanel-Uim/fork)
+
+SSPanel UIM 欢迎各种贡献，包括但不限于改进，新功能，文档和代码改进，问题和错误报告。
+
+## 协议
+
+SSPanel UIM 使用 MIT License 开源、不提供任何担保。使用 SSPanel UIM 即表明，您知情并同意：
+
+- 您在使用 SSPanel UIM 时，必须保留 Staff 页面（该页面包含了 MIT License）和页脚的 Staff 入口
+- SSPanel UIM 不会对您的任何损失负责，包括但不限于服务中断、Kernel Panic、机器无法开机或正常使用、数据丢失或硬件损坏、原子弹爆炸、第三次世界大战、SCP 基金会无法阻止 SCP-3125 引发的全球 MK 级现实重构等
 
 
-**ss-panel-v3-mod**是一款专为shadowsocks设计的web前端面板，再次感谢ss-panel-v3-mod 的制作者，修改后的功能简介：
+## 鸣谢
 
-- **支付系统集成**：集成 支付宝当面付 黛米付 易付通 码支付等多种支付系统，使用方法见项目[wiki](https://github.com/NimaQu/ss-panel-v3-mod_Uim/wiki/)
-- **UI** ：修改为 ~~援交~~ 圆角、并自定义了几个图标的显示，节点列表等級0可见等級1节点但无法看见节点详情，增加了国家图标显示
-- **商店**：商品增加同时连接设备数，用户限速属性
-- 从肥羊那里**抄**来的：新用户注册现金奖励|高等级节点体验|设备数量限制
-- **优化**：css和js等置入本地提升加载速度
-- 增加**v2Ray** 功能，详情请看 [wiki](https://github.com/NimaQu/ss-panel-v3-mod_Uim/wiki/v2ray-%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B)
+### [HKServerSolution](https://www.hkserversolution.com/cart.php)
 
-telegram水群：https://t.me/joinchat/GQehSEV7LEVuh5FxmdqA8Q 参考91yun管理，除非是 bug ，各种疑难杂症提问请先带价（抱歉我们跟你不熟不会帮你免费解决）不然请自行离开
+Demo 演示站服务器赞助。
 
-telegtam 频道 ：https://t.me/sspanel_Uim 
+### [贡献者](https://github.com/Anankke/SSPanel-Uim/graphs/contributors)
 
-演示站: [demo.nimaqu.com](https://demo.nimaqu.com) 账号和密码都是 admin  对接节点的 mukey=NimaQu
+SSPanel UIM 离不开所有 [贡献代码](https://github.com/Anankke/SSPanel-Uim/graphs/contributors) 和提交 Issue 的人。
 
-**原作者** [galaxychuck](https://github.com/galaxychuck)
+<details>
+<summary>查看贡献者</summary>
 
-[支持开发者请点我](https://github.com/NimaQu/ss-panel-v3-mod_UIM#%E5%85%B3%E4%BA%8E%E6%8D%90%E8%B5%A0)
+#### [Anankke](https://github.com/Anankke)
 
-## 搭建教程
+- 面板现 **维护者**
 
-GitHub Wiki : https://github.com/NimaQu/ss-panel-v3-mod_Uim/wiki/%E5%89%8D%E7%AB%AF%E5%AE%89%E8%A3%85
+#### [galaxychuck](https://github.com/galaxychuck)
 
-Wiki已经启用，欢迎为此面板维护wiki
+- 面板 **原作者**
 
-#### 鸣谢
-
-##### [galaxychuck](https://github.com/galaxychuck)
-
-- 面板**原作者**
-
-##### [hkserversolution](https://www.hkserversolution.com/cart.php)
-- Demo 演示站服务器赞助
-
-##### [dumplin](https://github.com/dumplin233) 
+##### [dumplin](https://github.com/dumplin233)
 
 - 码支付对接 + 码支付当面付二合一
 - 为面板加入 AFF 链接功能
@@ -59,7 +119,7 @@ Wiki已经启用，欢迎为此面板维护wiki
 - 节点负载情况显示&用户账户过期在首页弹窗提醒
 - 增加返利列表
 
-[**indexyz**](https://github.com/Indexyz)
+[**Indexyz**](https://github.com/Indexyz)
 
 - 为面板增加 v2Ray 功能
 
@@ -69,35 +129,47 @@ Wiki已经启用，欢迎为此面板维护wiki
 
 [**CGDF**](https://github.com/CGDF-GitHub)
 
-- 一键国旗
-- 财务报表
-- xcat一键update
-- 适配SSD
+- xcat 一键 update
+- 适配 SSD
 - 用户列表分页加载
 
 [**CHEN**](https://github.com/ChenSee)
 
 - 免签约支付宝与微信，自带监听，不需第三方软件，直接到个人账户
 
-##### 还有所有被引用过代码的同学，以及所有提交过issue的同学。
+[**laurieryayoi**](https://github.com/laurieryayoi)
 
-#### 关于捐赠
+- 重做美化UI（~~援交~~圆角化）
+- 新版 Vue(SPA) 版界面
+- 重写节点列表，支持分级显示所有级别节点
 
-您对我们的帮助将是支持我们做下去的动力，只需您在购买部分产品或向他人推荐产品时从我们的返利链接购买，这就是对我们很大的支持了。~~没有钱了，肯定要做啊，不做没有钱用啊，打工是不可能打工的，这辈子不可能打工的~~
+[**Sukka**](https://github.com/SukkaW)
 
-##### dumplin
+- Travis CI 持续集成
+- 单元测试
+- 全站 JavaScript 重写
+- 新版 Wiki 的搭建和维护
+
+</details>
+
+## 捐赠
+
+您对我们的帮助将是支持我们做下去的动力。您可以直接进行捐赠，也可以在购买部分产品或向他人推荐产品时从我们的返利链接购买。
+
+#### Anankke
+
+- [Anankke 很可爱请给 Anankke 钱](https://t.me/anankke/5)
+
+#### dumplin
 
 - [码支付-微信收款功能开通](https://codepay.fateqq.com/i/39756)
 
+#### galaxychuck
 
-##### NimaQu
+- [hkserversolution-推荐UIM面板服务器放置](https://www.hkserversolution.com/aff.php?aff=60)
+- [moecloud-美國VPS](https://moecloud.asia/aff.php?aff=56)
 
+#### laurieryayoi
 
-- [魔方云 - 低成本极速高效 专属您的私有云](https://www.cubecloud.net/aff.php?aff=796)
+[laurieryayoi 的前端课程报名](https://t.me/kinokonominoco)
 
-
-##### galaxychuck
-
-- [黛米付-支付接入](https://www.daimiyun.cn/register.php?aff=624)
-- [冲上云霄云主机](http://console.soar-clouds.com/aff.php?aff=94)
-- [Vultr](https://www.vultr.com/?ref=7205737)

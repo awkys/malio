@@ -2,41 +2,58 @@
 
 namespace App\Controllers;
 
-use App\Services\Auth;
+use App\Models\User;
 use App\Services\View;
+use App\Services\Auth;
+use Slim\Http\Response;
+use Psr\Http\Message\ResponseInterface;
+use Smarty;
 
 /**
  * BaseController
  */
-
 class BaseController
 {
-    public $view;
+    /**
+     * @var Smarty
+     */
+    protected $view;
 
-    public $smarty;
-    
-    public function construct__()
-    {
-    }
+    /**
+     * @var User
+     */
+    protected $user;
 
-    public function smarty()
+    /**
+     * Construct page renderer
+     */
+    public function __construct()
     {
-        $this->smarty = View::getSmarty();
-        return $this->smarty;
-    }
-
-    public function view()
-    {
-        return $this->smarty();
+        $this->view = View::getSmarty();
+        $this->user = Auth::getUser();
     }
 
     /**
-     * @param $response
-     * @param $res
-     * @return mixed
+     * Get smarty
+     *
+     * @return Smarty
      */
-    public function echoJson($response, $res)
+    public function view()
     {
-        return $response->getBody()->write(json_encode($res));
+        return $this->view;
+    }
+
+    // TODO: remove
+    /**
+     * Output JSON
+     *
+     * @param Response      $response
+     * @param array|object  $resource
+     *
+     * @return ResponseInterface
+     */
+    public function echoJson(Response $response, $resource)
+    {
+        return $response->withJson($resource);
     }
 }
