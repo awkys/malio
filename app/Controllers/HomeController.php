@@ -3,123 +3,311 @@
 namespace App\Controllers;
 
 use App\Models\InviteCode;
-use App\Models\User;
-use App\Models\Code;
-use App\Models\Payback;
-use App\Models\Paylist;
 use App\Services\Auth;
 use App\Services\Config;
-use App\Services\Payment;
 use App\Utils\AliPay;
-use App\Utils\Tools;
-use App\Utils\Telegram;
-use App\Utils\Tuling;
 use App\Utils\TelegramSessionManager;
-use App\Utils\QRcode;
-use App\Utils\Pay;
 use App\Utils\TelegramProcess;
-use App\Utils\Spay_tool;
+use App\Utils\Geetest;
+use App\Utils\Tools;
+use Slim\Http\{Request, Response};
+use Psr\Http\Message\ResponseInterface;
 
 /**
  *  HomeController
  */
 class HomeController extends BaseController
 {
-    public function index()
+    /**
+     * @param Request   $request
+     * @param Response  $response
+     * @param array     $args
+     */
+    public function index($request, $response, $args): ResponseInterface
     {
-        return $this->view()->display('index.tpl');
+        $GtSdk = null;
+        $recaptcha_sitekey = null;
+        if (Config::get('captcha_provider') != '') {
+            switch (Config::get('captcha_provider')) {
+                case 'recaptcha':
+                    $recaptcha_sitekey = Config::get('recaptcha_sitekey');
+                    break;
+                case 'geetest':
+                    $uid = time() . random_int(1, 10000);
+                    $GtSdk = Geetest::get($uid);
+                    break;
+            }
+        }
+
+        if (Config::get('enable_telegram') == true) {
+            $login_text = TelegramSessionManager::add_login_session();
+            $login = explode('|', $login_text);
+            $login_token = $login[0];
+            $login_number = $login[1];
+        } else {
+            $login_token = '';
+            $login_number = '';
+        }
+
+        if (Config::get('newIndex') === false && Config::get('theme') == 'material') {
+            return $response->write($this->view()->fetch('indexold.tpl'));
+        } else {
+            return $response->write($this->view()
+                ->assign('geetest_html', $GtSdk)
+                ->assign('login_token', $login_token)
+                ->assign('login_number', $login_number)
+                ->assign('telegram_bot', Config::get('telegram_bot'))
+                ->assign('enable_logincaptcha', Config::get('enable_login_captcha'))
+                ->assign('enable_regcaptcha', Config::get('enable_reg_captcha'))
+                ->assign('base_url', Config::get('baseUrl'))
+                ->assign('recaptcha_sitekey', $recaptcha_sitekey)
+                ->fetch('index.tpl'));
+        }
     }
 
-    public function code()
+    /**
+     * @param Request   $request
+     * @param Response  $response
+     * @param array     $args
+     */
+    public function indexold($request, $response, $args): ResponseInterface
+    {
+        return $response->write($this->view()->fetch('indexold.tpl'));
+    }
+
+    /**
+     * @param Request   $request
+     * @param Response  $response
+     * @param array     $args
+     */
+    public function code($request, $response, $args): ResponseInterface
     {
         $codes = InviteCode::where('user_id', '=', '0')->take(10)->get();
-        return $this->view()->assign('codes', $codes)->display('code.tpl');
+        return $response->write($this->view()->assign('codes', $codes)->fetch('code.tpl'));
     }
 
-    public function down()
+    /**
+     * @param Request   $request
+     * @param Response  $response
+     * @param array     $args
+     */
+    public function tos($request, $response, $args): ResponseInterface
     {
+        return $response->write($this->view()->fetch('tos.tpl'));
     }
 
-    public function tos()
+    /**
+     * @param Request   $request
+     * @param Response  $response
+     * @param array     $args
+     */
+    public function staff($request, $response, $args): ResponseInterface
     {
-        return $this->view()->display('tos.tpl');
+        return $response->write($this->view()->fetch('staff.tpl'));
     }
-    
-    public function staff()
+
+    /**
+     * @param Request   $request
+     * @param Response  $response
+     * @param array     $args
+     */
+    public function telegram($request, $response, $args): ResponseInterface
     {
-        return $this->view()->display('staff.tpl');
-    }
-    
-    public function telegram($request, $response, $args)
-    {
-        $token = "";
-        if (isset($request->getQueryParams()["token"])) {
-            $token = $request->getQueryParams()["token"];
-        }
-        
+        $token = $request->getQueryParam('token');
         if ($token == Config::get('telegram_request_token')) {
             TelegramProcess::process();
+            $result = '1';
         } else {
-            echo("不正确请求！");
+            $result = '0';
         }
+        return $response->write($result);
     }
-    
-    public function page404($request, $response, $args)
+
+    /**
+     * @param Request   $request
+     * @param Response  $response
+     * @param array     $args
+     */
+    public function page404($request, $response, $args): ResponseInterface
     {
-        return $this->view()->display('404.tpl');
+        return $response->write($this->view()->fetch('404.tpl'));
     }
-    
-    public function page405($request, $response, $args)
+
+    /**
+     * @param Request   $request
+     * @param Response  $response
+     * @param array     $args
+     */
+    public function page405($request, $response, $args): ResponseInterface
     {
-        return $this->view()->display('405.tpl');
+        return $response->write($this->view()->fetch('405.tpl'));
     }
-    
-    public function page500($request, $response, $args)
+
+    /**
+     * @param Request   $request
+     * @param Response  $response
+     * @param array     $args
+     */
+    public function page500($request, $response, $args): ResponseInterface
     {
-		return $this->view()->display('500.tpl');
+        return $response->write($this->view()->fetch('500.tpl'));
     }
 
-    //@todo: Will be abandoned in future.
-    public function codepay_callback($request, $response, $args)
-    {
-        echo '
-            <script>
-               window.location.href="/user/code";
-            </script>
-            ';
-        return;
-    }
-
-
-    //@todo: Will be abandoned in future.
-    public function pay_callback($request, $response, $args)
-    {
-        Pay::callback($request);
-    }
-
-
-
-    public function getOrderList($request, $response, $args)
+    /**
+     * @param Request   $request
+     * @param Response  $response
+     * @param array     $args
+     */
+    public function getOrderList($request, $response, $args): ResponseInterface
     {
         $key = $request->getParam('key');
         if (!$key || $key != Config::get('key')) {
             $res['ret'] = 0;
-            $res['msg'] = "错误";
-            return $response->getBody()->write(json_encode($res));
+            $res['msg'] = '错误';
+            return $response->write(json_encode($res));
         }
-        return $response->getBody()->write(json_encode(['data' => AliPay::getList()]));
+        return $response->write(json_encode(['data' => AliPay::getList()]));
     }
 
-    public function setOrder($request, $response, $args)
+    /**
+     * @param Request   $request
+     * @param Response  $response
+     * @param array     $args
+     */
+    public function setOrder($request, $response, $args): ResponseInterface
     {
         $key = $request->getParam('key');
         $sn = $request->getParam('sn');
         $url = $request->getParam('url');
         if (!$key || $key != Config::get('key')) {
             $res['ret'] = 0;
-            $res['msg'] = "错误";
-            return $response->getBody()->write(json_encode($res));
+            $res['msg'] = '错误';
+            return $response->write(json_encode($res));
         }
-        return $response->getBody()->write(json_encode(['res' => AliPay::setOrder($sn, $url)]));
+        return $response->write(json_encode(['res' => AliPay::setOrder($sn, $url)]));
+    }
+
+    public function getDocCenter($request, $response, $args)
+    {
+        $user = Auth::getUser();
+        if (!$user->isLogin && Config::get('enable_documents') === false) {
+            $newResponse = $response->withStatus(302)->withHeader('Location', '/');
+            return $newResponse;
+        }
+        $basePath = Config::get('remote_documents') === true ? Config::get('documents_source') : '/docs/GeekQu';
+        return $this->view()
+            ->assign('appName', Config::get('documents_name'))
+            ->assign('basePath', $basePath)
+            ->fetch('doc/index.tpl');
+    }
+
+    public function getSubLink($request, $response, $args)
+    {
+        $user = Auth::getUser();
+        if (!$user->isLogin) {
+            return $msg = '!> ₍₍ ◝(・ω・)◟ ⁾⁾ 您没有登录噢，[点击此处登录](/auth/login \':ignore target=_blank\') 之后再刷新就阔以了啦';
+        } else {
+            $subInfo = LinkController::getSubinfo($user, 0);
+            switch ($request->getParam('type')) {
+                case 'ssr':
+                    $msg = [
+                        '**订阅链接：**',
+                        '```',
+                        $subInfo['ssr'] . '&extend=1',
+                        '```'
+                    ];
+                    break;
+                case 'v2ray':
+                    $msg = [
+                        '**订阅链接：**',
+                        '```',
+                        $subInfo['v2ray'] . '&extend=1',
+                        '```'
+                    ];
+                    break;
+                case 'ssd':
+                    $msg = [
+                        '**订阅链接：**',
+                        '```',
+                        $subInfo['ssd'],
+                        '```'
+                    ];
+                    break;
+                case 'clash':
+                    $msg = [
+                        '**订阅链接：**[[点击下载配置]](' . $subInfo['clash'] . ')',
+                        '```',
+                        $subInfo['clash'],
+                        '```'
+                    ];
+                    break;
+                case 'surge':
+                    $msg = [
+                        '**Surge Version 2.x 托管配置链接：**[[iOS 点击此处一键添加]](surge:///install-config?url=' . urlencode($subInfo['surge2']) . ')',
+                        '```',
+                        $subInfo['surge2'],
+                        '```',
+                        '**Surge Version 3.x 托管配置链接：**[[iOS 点击此处一键添加]](surge3:///install-config?url=' . urlencode($subInfo['surge3']) . ')',
+                        '```',
+                        $subInfo['surge3'],
+                        '```'
+                    ];
+                    break;
+                case 'kitsunebi':
+                    $msg = [
+                        '**包含 ss、v2ray 的合并订阅链接：**',
+                        '```',
+                        $subInfo['kitsunebi'] . '&extend=1',
+                        '```'
+                    ];
+                    break;
+                case 'surfboard':
+                    $msg = [
+                        '**托管配置链接：**',
+                        '```',
+                        $subInfo['surfboard'],
+                        '```'
+                    ];
+                    break;
+                case 'quantumult_sub':
+                    $msg = [
+                        '**ssr 订阅链接：**[[iOS 点击此处一键添加]](quantumult://configuration?server=' . Tools::base64_url_encode($subInfo['ssr']) . ')',
+                        '```',
+                        $subInfo['ssr'],
+                        '```',
+                        '**V2ray 订阅链接：**[[iOS 点击此处一键添加]](quantumult://configuration?server=' . Tools::base64_url_encode($subInfo['quantumult_v2']) . ')',
+                        '```',
+                        $subInfo['quantumult_v2'],
+                        '```'
+                    ];
+                    break;
+                case 'quantumult_conf':
+                    $msg = [
+                        '**导入 ss、ssr、v2ray 以及分流规则的配置链接：**',
+                        '```',
+                        $subInfo['quantumult_sub'],
+                        '```',
+                        '**导入类似 Surge、Clash 使用自定义策略组的配置链接：**',
+                        '```',
+                        $subInfo['quantumult_conf'],
+                        '```'
+                    ];
+                    break;
+                case 'shadowrocket':
+                    $msg = [
+                        '**包含 ss、ssr、v2ray 的合并订阅链接：**[[iOS 点击此处一键添加]](sub://' . base64_encode($subInfo['shadowrocket']) . ')',
+                        '```',
+                        $subInfo['shadowrocket'],
+                        '```'
+                    ];
+                    break;
+                default:
+                    $msg = [
+                        '获取失败了呢...，请联系管理员。'
+                    ];
+                    break;
+            }
+        }
+        return implode(PHP_EOL, $msg);
     }
 }
